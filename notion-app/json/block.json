@@ -1,0 +1,40 @@
+{
+    "object": "block",
+    "id": "0db1f426-d108-4d51-b016-3c606f87d7a3",
+    "created_time": "2022-06-04T12:08:00.000Z",
+    "last_edited_time": "2022-06-04T18:14:00.000Z",
+    "created_by": {
+        "object": "user",
+        "id": "27cf0fa7-ae52-4d3f-a8bd-961291ab2a15"
+    },
+    "last_edited_by": {
+        "object": "user",
+        "id": "27cf0fa7-ae52-4d3f-a8bd-961291ab2a15"
+    },
+    "has_children": false,
+    "archived": false,
+    "type": "code",
+    "code": {
+        "caption": [],
+        "rich_text": [
+            {
+                "type": "text",
+                "text": {
+                    "content": "cout << \"Hello\" << endl;",
+                    "link": null
+                },
+                "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default"
+                },
+                "plain_text": "cout << \"Hello\" << endl;",
+                "href": null
+            }
+        ],
+        "language": "c++"
+    }
+}

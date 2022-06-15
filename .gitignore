@@ -1,6 +1,5 @@
 /.DS_Store
 /.vscode
-/Icon\r
-/Icon
-/__pycache__
+Icon
+__pycache__
 /workspace.code-workspace

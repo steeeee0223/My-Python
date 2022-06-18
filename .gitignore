@@ -1,5 +1,6 @@
-/.DS_Store
+.DS_Store
 /.vscode
 Icon
 __pycache__
 /workspace.code-workspace
+.ipynb_checkpoints

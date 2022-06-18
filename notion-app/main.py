@@ -1,10 +1,8 @@
 import json
-from asyncio import sleep
-from fastapi import FastAPI, Request, Form, Response, UploadFile, BackgroundTasks, Depends
+from fastapi import FastAPI, Request, Form, Response, UploadFile, BackgroundTasks
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from pydantic import BaseModel
 
 # Import from Files
 from .utils import getId
@@ -66,6 +64,7 @@ async def get_upload_page(request: Request, id: str):
     return templates.TemplateResponse('upload.html', {'request': request, 'id': id})
 
 async def upload_task(id: str, file: UploadFile, background_tasks: BackgroundTasks):
+    '''Currently not using this function'''
     background_tasks.add_task(createPage, id, file)
     return background_tasks.tasks[-1]
 

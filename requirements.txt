@@ -1,5 +1,7 @@
+beautifulsoup4
 fastapi[all]
 Jinja2==3.1.2
+Markdown
 python-multipart==0.0.5
 requests[security]
 uvicorn==0.13.4

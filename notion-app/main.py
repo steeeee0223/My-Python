@@ -5,9 +5,10 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 # Import from Files
+# REMEMBER TO ADD . BACK
 from .utils import getId
 from .page import createPage
-from .database import createDatabase, insertDatabase
+from .database import createDatabase, insertDatabase, readDatabase
 
 # Fetch token
 file = open('notion-app/SECRET.json')
@@ -78,3 +79,4 @@ async def upload_files(request: Request, id: str, file_lists: list[UploadFile]):
         'request': request, 'id': id, 'failed': failed
     })
 
+# readDatabase("a5236de701154552a04315e398e098c8")

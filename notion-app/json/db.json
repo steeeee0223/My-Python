@@ -1,22 +1,25 @@
 {
     "object": "database",
-    "id": "e926a423-1efa-4d11-a480-2352602db0bf",
+    "id": "a5236de7-0115-4552-a043-15e398e098c8",
     "cover": null,
     "icon": null,
-    "created_time": "2022-06-07T13:53:00.000Z",
+    "created_time": "2022-06-15T08:49:00.000Z",
     "created_by": {
         "object": "user",
-        "id": "27cf0fa7-ae52-4d3f-a8bd-961291ab2a15"
+        "id": "72b7178f-f9d4-4f21-8411-c5e9e62daef1"
     },
     "last_edited_by": {
         "object": "user",
         "id": "27cf0fa7-ae52-4d3f-a8bd-961291ab2a15"
     },
-    "last_edited_time": "2022-06-08T05:45:00.000Z",
+    "last_edited_time": "2022-06-20T06:12:00.000Z",
     "title": [
         {
             "type": "text",
-            "text": { "content": "My Code", "link": null },
+            "text": {
+                "content": "My New Database",
+                "link": null
+            },
             "annotations": {
                 "bold": false,
                 "italic": false,
@@ -25,211 +28,83 @@
                 "code": false,
                 "color": "default"
             },
-            "plain_text": "My Code",
+            "plain_text": "My New Database",
             "href": null
         }
     ],
+    "description": [],
+    "is_inline": false,
     "properties": {
         "Tags": {
-            "id": "RLOy",
+            "id": "%3DMvI",
             "name": "Tags",
             "type": "multi_select",
             "multi_select": {
                 "options": [
                     {
-                        "id": "07563cd0-7cb9-4a91-9f7d-bb38df32d31f",
-                        "name": "..",
-                        "color": "yellow"
-                    },
-                    {
-                        "id": "68c3c214-d0b7-4753-ad50-aa5f4890f169",
-                        "name": "Test",
-                        "color": "default"
-                    },
-                    {
-                        "id": "1a015565-43fc-4fb0-bc2d-47cac74ddd16",
-                        "name": "stuff",
-                        "color": "brown"
-                    },
-                    {
-                        "id": "1179e5dc-1552-4977-b981-55d8585d74c5",
-                        "name": "stuff2",
-                        "color": "purple"
-                    },
-                    {
-                        "id": "c7785779-d721-4843-a0b5-a1703beb84c0",
-                        "name": "stuff3",
-                        "color": "red"
-                    },
-                    {
-                        "id": "fe6ec4f7-b31d-452e-944f-c78093118f03",
-                        "name": "stuff4",
-                        "color": "orange"
-                    },
-                    {
-                        "id": "c438fd01-38cc-4024-9319-79a221fb561a",
-                        "name": "Python",
-                        "color": "pink"
-                    },
-                    {
-                        "id": "5446baf2-396d-43c7-8312-bf36391bf185",
-                        "name": "LeetCode",
+                        "id": "5418ec58-cb54-41dc-b67b-5089ebfc284c",
+                        "name": "NodeJs",
                         "color": "gray"
-                    },
-                    {
-                        "id": "c287c435-3768-4192-bb56-ad1ecc6c7d6c",
-                        "name": "Tree",
-                        "color": "green"
-                    },
-                    {
-                        "id": "5101a8f8-47e8-4bd7-a2e6-b08e1edc8801",
-                        "name": "Design",
-                        "color": "blue"
-                    },
-                    {
-                        "id": "2ccae10f-f071-44e7-8fc4-6578bfc8130d",
-                        "name": "Array",
-                        "color": "red"
-                    },
-                    {
-                        "id": "c84a043d-e8e0-45c9-9f53-a2fd8d9ef1fe",
-                        "name": "C++",
-                        "color": "default"
-                    },
-                    {
-                        "id": "f274e89b-59f3-4faa-a422-790d2553bacf",
-                        "name": "PHP",
-                        "color": "green"
-                    },
-                    {
-                        "id": "a2614793-ac49-4cba-8317-1bc8a69bf1a7",
-                        "name": "Recursion",
-                        "color": "default"
-                    },
-                    {
-                        "id": "2436ef01-74a6-4a7d-8ad3-316b028e75e0",
-                        "name": "Binary Search",
-                        "color": "brown"
-                    },
-                    {
-                        "id": "f47edb86-cefe-4b52-9689-358c0be10a18",
-                        "name": "Bit Manipulation",
-                        "color": "pink"
-                    },
-                    {
-                        "id": "685389e5-36ca-48bb-9781-d7ecd7535c5a",
-                        "name": "Two Pointers",
-                        "color": "brown"
-                    },
-                    {
-                        "id": "f7cdfc10-a213-454a-af42-e26ec1496c88",
-                        "name": "Stack & Queue",
-                        "color": "red"
-                    },
-                    {
-                        "id": "2a085828-776d-4ec9-9d22-794351513ea4",
-                        "name": "Math",
-                        "color": "green"
-                    },
-                    {
-                        "id": "15ea75b3-849e-4ec1-8739-004634282d60",
-                        "name": "Testing",
-                        "color": "purple"
-                    },
-                    {
-                        "id": "cc2c3b43-4770-4d48-8c34-8a8dd576d0b1",
-                        "name": "Dynamic Programming",
-                        "color": "yellow"
-                    },
-                    {
-                        "id": "b0bc3637-f292-4f4c-8326-4fc6f697034b",
-                        "name": "Prefix Sum",
-                        "color": "yellow"
-                    },
-                    {
-                        "id": "39ddb8bc-f5f2-4cc2-b70a-b28e42983b6f",
-                        "name": "Greedy",
-                        "color": "blue"
-                    },
-                    {
-                        "id": "86cb7224-d41a-4b95-9ba6-85c4dc132a8f",
-                        "name": "Sorting",
-                        "color": "orange"
-                    },
-                    {
-                        "id": "6a0b88d1-654a-4d6c-969e-861b5f3bf688",
-                        "name": "String",
-                        "color": "brown"
-                    },
-                    {
-                        "id": "30ff35f7-93ca-4f36-a9ca-1100c3ba2121",
-                        "name": "Matrix",
-                        "color": "purple"
-                    },
-                    {
-                        "id": "afeafd4e-d537-4453-8410-af659a5cdc73",
-                        "name": "Linked List",
-                        "color": "blue"
                     }
                 ]
             }
         },
         "Status": {
-            "id": "RMen",
+            "id": "%3E%5CF%7D",
             "name": "Status",
             "type": "select",
             "select": {
                 "options": [
                     {
-                        "id": "cb8bdb21-9d14-43c6-9d9f-60bfb5c93dec",
+                        "id": "8dc98a87-07ff-42ee-98ba-028b6fc34352",
                         "name": "Active",
-                        "color": "default"
+                        "color": "green"
+                    },
+                    {
+                        "id": "d8984339-187d-4926-adba-0948cd348017",
+                        "name": "Inactive",
+                        "color": "red"
                     }
                 ]
             }
         },
+        "Property 1": {
+            "id": "IpZ%7B",
+            "name": "Property 1",
+            "type": "last_edited_time",
+            "last_edited_time": {}
+        },
         "Language": {
-            "id": "z%60~%5C",
+            "id": "UBvJ",
             "name": "Language",
             "type": "select",
             "select": {
                 "options": [
                     {
-                        "id": "3f8c4ed6-4405-49b3-85aa-4e0f1daf6cdd",
-                        "name": "python",
-                        "color": "red"
-                    },
-                    {
-                        "id": "3f860138-ea00-45a7-a8d8-3d84a76241ab",
-                        "name": "php",
-                        "color": "purple"
-                    },
-                    {
-                        "id": "ff6b6572-1dbd-407d-9566-3668857231d2",
-                        "name": "html",
-                        "color": "green"
-                    },
-                    {
-                        "id": "e26d427a-3264-4226-8a35-8d040e0b049b",
-                        "name": "java",
-                        "color": "orange"
-                    },
-                    {
-                        "id": "840dc0a5-a170-4034-9f48-11588a0c2066",
-                        "name": "c++",
+                        "id": "c0f02cad-df93-4820-b716-b95eba1551bf",
+                        "name": "javascript",
                         "color": "pink"
-                    },
-                    {
-                        "id": "496e2fe7-7dbe-4cfe-9025-cbb430cfab06",
-                        "name": "c",
-                        "color": "gray"
                     }
                 ]
             }
         },
-        "Name": { "id": "title", "name": "Name", "type": "title", "title": {} }
+        "Property": {
+            "id": "gEgx",
+            "name": "Property",
+            "type": "created_by",
+            "created_by": {}
+        },
+        "Name": {
+            "id": "title",
+            "name": "Name",
+            "type": "title",
+            "title": {}
+        }
     },
-    "parent": { "type": "workspace", "workspace": true },
-    "url": "https://www.notion.so/e926a4231efa4d11a4802352602db0bf",
+    "parent": {
+        "type": "page_id",
+        "page_id": "6e722e9e-97a8-4656-b101-b2969dda3144"
+    },
+    "url": "https://www.notion.so/a5236de701154552a04315e398e098c8",
     "archived": false
 }

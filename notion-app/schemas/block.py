@@ -1,77 +1,84 @@
-from .base import Text
-
-class Icon():
-    def __init__(self, emoji: str="💡") -> None:
-        self.emoji = emoji       
-
-class Code():
-    def __init__(self, content: str, language: str):
-        self.rich_text = [Text(content).__dict__]
-        self.language = language
+from typing import Optional
+from .base import CodeText, RichText, Icon     
         
 class CodeBlock():
     def __init__(self, content: str, language: str):
         self.object = 'block'
         self.type = 'code'
-        self.code = Code(content, language).__dict__
+        self.code = CodeText(content, language).__dict__
 
-class TextBlock():
-    def __init__(self, content: str="") -> None:
-        self.rich_text: list[dict] = [Text(content).__dict__]
-        self.color = "default"
-        self.children = []
+class TableOfContent():
+    def __init__(self) -> None:
+        self.type = 'table_of_contents'
+        self.table_of_contents = {"color": "default"}
+
+class Divider():
+    def __init__(self) -> None:
+        self.type = 'divider'
+        self.divider = {}
 
 class Block():
-    def __init__(self, block_type: str, content: str="") -> None:
+    def __init__(self, block_type: str, content: Optional[str]=None) -> None:
         self.object = 'block'
         self.type = block_type
-        self.__setattr__(block_type, TextBlock(content).__dict__)
+        self.__setattr__(block_type, RichText(content).__dict__)
         
-class HeadingBlock(Block):
-    def __init__(self, size: int, content: str="") -> None:
-        super(HeadingBlock, self).__init__(f"heading_{size}", content)
+class Heading(Block):
+    def __init__(self, size: int, content: Optional[str] =None) -> None:
+        super(Heading, self).__init__(f"heading_{size}", content)
 
-class ParagraphBlock(Block):
-    def __init__(self, content: str="") -> None:
-        super(ParagraphBlock, self).__init__("paragraph", content)
+class Paragraph(Block):
+    def __init__(self, content: Optional[str] =None) -> None:
+        super(Paragraph, self).__init__("paragraph", content)
         
-class QuoteBlock(Block):
-    def __init__(self, content: str="") -> None:
-        super(QuoteBlock, self).__init__("quote", content)
+class Quote(Block):
+    def __init__(self, content: Optional[str] =None) -> None:
+        super(Quote, self).__init__("quote", content)
 
-class CalloutBlock(Block):
-    def __init__(self, content: str="") -> None:
-        super(CalloutBlock, self).__init__("callout", content)
+class Callout(Block):
+    def __init__(self, content: Optional[str] =None) -> None:
+        super(Callout, self).__init__("callout", content)
         self.__getattribute__('callout')['icon'] = Icon().__dict__
 
-class TodoBlock(Block):
-    def __init__(self, content: str="", checked: bool=False) -> None:
-        super(TodoBlock, self).__init__("to_do", content)
+class Todo(Block):
+    def __init__(self, content: Optional[str] =None, checked: bool=False) -> None:
+        super(Todo, self).__init__("to_do", content)
         self.__getattribute__('to_do')['checked'] = checked
 
-class ListItemBlock(Block):
-    def __init__(self, list_item: str, content: str="", **items: tuple[str,list]) -> None:
-        super(ListItemBlock, self).__init__(list_item, content)
+class ListItem(Block):
+    def __init__(
+            self, list_item: str, content: Optional[str] =None, **items: tuple[str,list]
+        ) -> None:
+        super(ListItem, self).__init__(list_item, content)
         createChild = lambda item: BLOCK_MAP[item[0]](*item[1]).__dict__
         children = list(map(createChild, items.values()))
         self.__getattribute__("bulleted_list_item")['children'].extend(children)        
 
-class BulletedList(ListItemBlock):
-    def __init__(self, content: str="", **items: tuple[str,list]) -> None:
+class BulletedList(ListItem):
+    def __init__(
+        self, content: Optional[str] =None, **items: tuple[str,list]
+    ) -> None:
         super(BulletedList, self).__init__("bulleted_list_item", content, **items)
         
-class NumberedList(ListItemBlock):
-    def __init__(self, content: str="", **items: tuple[str,list]) -> None:
+class NumberedList(ListItem):
+    def __init__(
+            self, content: Optional[str] =None, **items: tuple[str,list]
+        ) -> None:
         super(NumberedList, self).__init__("numbered_list_item", content, **items)
         
 BLOCK_MAP = {
-    "heading_1": HeadingBlock,
-    "heading_2": HeadingBlock,
-    "heading_3": HeadingBlock,
-    "paragraph": ParagraphBlock,
-    "quote": QuoteBlock,
-    "callout": CalloutBlock,
-    "to_do": TodoBlock,
+    "table_of_content": TableOfContent,
+    "hr": Divider, # divider
+    "h1": Heading, # "heading_1"
+    "h2": Heading, # "heading_2"
+    "h3": Heading, # "heading_3"
+    "h4": Heading, # "heading_3"
+    "h5": Heading, # "heading_3"
+    "h6": Heading, # "heading_3"
+    "paragraph": Paragraph,
+    "quote": Quote,
+    "callout": Callout,
+    "to_do": Todo,
     "bulleted_list_item": BulletedList,
     "numbered_list_item": NumberedList
 }

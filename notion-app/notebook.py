@@ -1,7 +1,10 @@
 import json
 import base64
 import markdown
+import re
 from bs4 import BeautifulSoup
+
+from schemas.block import BLOCK_MAP
 
 with open('./notion-app/try/markdown.ipynb', 'r') as f:
     file = f.read()
@@ -34,8 +37,19 @@ for i, cell in enumerate(file['cells']):
         
         for count, tag in enumerate(soup.contents):
             if count == 20: break
-            if not tag.name: continue
-            print(tag.name, tag.get_text(strip=True))
+            if not tag.name or not tag.name.startswith('h'): continue
+            # print(tag.name, tag.get_text(strip=True))
+            print(tag.name)
+            
+            
+            result = re.match(r'h([1-6])', tag.name)
+            print(result.group(2))
+            
+
+            # block = BLOCK_MAP[tag.name]()
+            
+            # print(block.__dict__)
+            
             print('='*10)
             
 

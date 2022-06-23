@@ -52,7 +52,7 @@ class ListItem(Block):
         super(ListItem, self).__init__(list_item, content)
         createChild = lambda item: BLOCK_MAP[item[0]](*item[1]).__dict__
         children = list(map(createChild, items.values()))
-        self.__getattribute__("bulleted_list_item")['children'].extend(children)        
+        self.__getattribute__(list_item)['children'].extend(children)        
 
 class BulletedList(ListItem):
     def __init__(
@@ -68,19 +68,22 @@ class NumberedList(ListItem):
         
 BLOCK_MAP = {
     "table_of_content": TableOfContent,
-    "hr": Divider, # divider
-    "h1": Heading, # "heading_1"
-    "h2": Heading, # "heading_2"
-    "h3": Heading, # "heading_3"
-    "h4": Heading, # "heading_3"
-    "h5": Heading, # "heading_3"
-    "h6": Heading, # "heading_3"
-    "paragraph": Paragraph,
-    "quote": Quote,
-    "callout": Callout,
-    "to_do": Todo,
-    "bulleted_list_item": BulletedList,
-    "numbered_list_item": NumberedList
+    "thematic_break": Divider, # divider
+    
+    "heading": Heading, # f"heading_{level}"
+    "paragraph": Paragraph, # "paragraph"
+    "block_quote": Quote, # "quote"
+    "block_callout": Callout, # "callout"
+    "block_code": CodeBlock, # "code"
+    "task_list_item": Todo, # "to_do"
+    # type: list  
+    # ordered: bool =False
+    "list_item": ListItem,
+    # type: list  
+    # ordered: bool
+
+    # "ul": BulletedList, # "bulleted_list_item"
+    # "ol": NumberedList # "numbered_list_item"
 }
 
 

@@ -13,9 +13,11 @@
 - - [x] Failed url
 - - [x] Unsupported type
 - - [x] Content length exceeded
+- - [ ] Failed creating database message
+- - [ ] Failed inserting database message
 - - [ ] ...
 - [x] Support more file type
-- [ ] Suppoer more block objects
+- [x] Suppoer more block objects
 - [ ] Support .ipynb
 - [x] Create Jinja HTML page
 - [ ] Add CSS and Bootstrap

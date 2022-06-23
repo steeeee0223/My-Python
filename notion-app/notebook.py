@@ -1,9 +1,9 @@
 import json
 import base64
-import markdown
-import re
-from bs4 import BeautifulSoup
+import mistune
+from pprint import pprint
 
+from utils.block_callout import plugin_callout
 from schemas.block import BLOCK_MAP
 
 with open('./notion-app/try/markdown.ipynb', 'r') as f:
@@ -19,44 +19,37 @@ def writeImage(img_data, img_name="imageToSave"):
     with open(f"./notion-app/try/{img_name}.png", "wb") as fh:
         fh.write(base64.urlsafe_b64decode(img_data))
 
-def markdownToHtml(source: str) -> str:
-    html = markdown.markdown(source)
-    return html
-    
-
 for i, cell in enumerate(file['cells']):
     cellType = cell['cell_type']
-    print(f"type = {cellType}")
-    # list of source code lines
-    # cell['source']: list[str]
     if cellType == 'markdown':
         source: str =''.join(cell['source'])
-        html: str =markdownToHtml(source)
-        soup = BeautifulSoup(html, "html.parser") #.contents # list[PageElement]
-        print(len(soup))
-        
-        for count, tag in enumerate(soup.contents):
-            if count == 20: break
-            if not tag.name or not tag.name.startswith('h'): continue
-            # print(tag.name, tag.get_text(strip=True))
-            print(tag.name)
-            
-            
-            result = re.match(r'h([1-6])', tag.name)
-            print(result.group(2))
-            
+        plugins = ['table', 'task_lists', 'url', 'abbr',
+                    'strikethrough', plugin_callout]
+        blocks: list[dict] =mistune.markdown(source, renderer='ast', plugins=plugins)
+        blockList: list[dict] =[]
+        for i, block in enumerate(blocks):
+            print(i)
+            # pprint(block)
+            blockType = block['type']
+            if blockType == 'newline': continue
 
-            # block = BLOCK_MAP[tag.name]()
+            elif blockType == 'heading':
+                level = block['level'] if block['level'] < 4 else 3
+                content = ''.join(child['text'] for child in block['children'])
+
+                obj = BLOCK_MAP[blockType](size=level, content=content)
+                blockList.append(obj.__dict__)
+            elif blockType == 'paragraph':
+                pprint(block)
             
-            # print(block.__dict__)
+            else:
+                print(f'{blockType} is in BLOCK_MAP: {blockType in BLOCK_MAP}')
+                # pprint(block)
+                
             
             print('='*10)
-            
-
-    print('='*20)
 
 
-    
 '''
     if (outputs := cell.get('outputs')):
         for output in outputs:

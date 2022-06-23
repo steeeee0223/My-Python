@@ -6,7 +6,7 @@ from fastapi.templating import Jinja2Templates
 
 # Import from Files
 # REMEMBER TO ADD . BACK
-from .utils import getId
+from .utils.get_id import getId
 from .page import createPage
 from .database import createDatabase, insertDatabase, readDatabase
 

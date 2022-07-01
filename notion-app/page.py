@@ -1,4 +1,5 @@
 import json
+import re
 import requests
 from fastapi import UploadFile
 from pathlib import PurePath
@@ -20,6 +21,11 @@ ignore = {'.DS_Store', 'Icon\r',
           '.vscode', '.ipynb_checkpoints', '__pycache__', '.git', 
           '.devcontainer'}
 
+def splitContent(s: str, n: int=2000):
+    def _f(s, n):
+        while s: yield s[:n]; s = s[n:]
+    return list(_f(s, n))
+
 def createPage(database_id: str, file: UploadFile) -> int|None:
     url = f'https://api.notion.com/v1/pages'
     path = file.filename
@@ -30,9 +36,12 @@ def createPage(database_id: str, file: UploadFile) -> int|None:
     if ext not in languages: return # path
     language = languages[ext]
 
-    content = file.file.read().decode('utf8')
-    block = CodeBlock(content, language).__dict__
-    page = Page(database_id, name, language, 'Active', *tags[:-1], block=block)
+    content = splitContent(file.file.read().decode('utf8'))
+    blocks = {
+        f'block{i}': CodeBlock(text, language).__dict__ 
+        for i, text in enumerate(content)
+    }
+    page = Page(database_id, name, language, 'Active', *tags[:-1], **blocks)
     res = requests.post(url=url, headers=headers, json=page.__dict__)
     code = res.status_code
     return code

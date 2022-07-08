@@ -6,7 +6,7 @@ CALLOUT_PATTERN = re.compile(
 )
 
 def parse_callout(block: BlockParser, m: re.Match, state: dict):
-    callout = [
+    children = [
         {   
             "type": "callout_header", "text": m.group(1)
         },
@@ -14,7 +14,7 @@ def parse_callout(block: BlockParser, m: re.Match, state: dict):
             "type": "paragraph", "text": m.group(2)
         }
     ]
-    return {"type": "block_callout", "children": callout}
+    return {"type": "block_callout", "children": children}
 
 
 # def render_html_def_list(text):

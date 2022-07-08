@@ -64,10 +64,10 @@ async def get_upload_page(request: Request, id: str):
     print('Running get_upload_page...')
     return templates.TemplateResponse('upload.html', {'request': request, 'id': id})
 
-async def upload_task(id: str, file: UploadFile, background_tasks: BackgroundTasks):
-    '''Currently not using this function'''
-    background_tasks.add_task(createPage, id, file)
-    return background_tasks.tasks[-1]
+# async def upload_task(id: str, file: UploadFile, background_tasks: BackgroundTasks):
+#     '''Currently not using this function'''
+#     background_tasks.add_task(createPage, id, file)
+#     return background_tasks.tasks[-1]
 
 @app.post('/upload/{id}', response_class=HTMLResponse)
 async def upload_files(request: Request, id: str, file_lists: list[UploadFile]):

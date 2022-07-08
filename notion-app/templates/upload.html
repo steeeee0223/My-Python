@@ -16,17 +16,17 @@
         <input type="submit" value="Submit"/>
     </form>
     <script>
-     files = document.querySelector("#file_input").files;
-     document.querySelector("#file_input").addEventListener("change", function() {
-        files = document.querySelector("#file_input").files;
-        var directories = {}
-        for (var file of files) {
-          file.webkitRelativePath
-          directories[file.name] = file.webkitRelativePath
-        }
-        directories = JSON.stringify(directories);
-        document.querySelector("#directories").value = directories
-     });
+    files = document.querySelector("#file_input").files;
+    document.querySelector("#file_input").addEventListener("change", function() {
+    files = document.querySelector("#file_input").files;
+    var directories = {}
+    for (var file of files) {
+        file.webkitRelativePath
+        directories[file.name] = file.webkitRelativePath
+    }
+    directories = JSON.stringify(directories);
+    document.querySelector("#directories").value = directories
+    });
     </script>
 </body>
 </html>

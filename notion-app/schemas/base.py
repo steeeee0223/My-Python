@@ -10,6 +10,14 @@ class Text:
     def __init__(self, content: Optional[str] =None):
         self.type = 'text'
         self.text = Content(content).__dict__ 
+        # self.annotations = {
+        #     "bold": False,
+        #     "italic": False,
+        #     "strikethrough": False,
+        #     "underline": False,
+        #     "code": False,
+        #     "color": "default"
+        # }
 
 class RichText:
     def __init__(self, content: Optional[str] =None) -> None:

@@ -24,8 +24,8 @@ class Block():
         self.__setattr__(block_type, RichText(content).__dict__)
         
 class Heading(Block):
-    def __init__(self, size: int, content: Optional[str] =None) -> None:
-        super(Heading, self).__init__(f"heading_{size}", content)
+    def __init__(self, level: int, content: Optional[str] =None) -> None:
+        super(Heading, self).__init__(f"heading_{level}", content)
 
 class Paragraph(Block):
     def __init__(self, content: Optional[str] =None) -> None:
@@ -46,44 +46,38 @@ class Todo(Block):
         self.__getattribute__('to_do')['checked'] = checked
 
 class ListItem(Block):
-    def __init__(
-            self, list_item: str, content: Optional[str] =None, **items: tuple[str,list]
-        ) -> None:
-        super(ListItem, self).__init__(list_item, content)
-        createChild = lambda item: BLOCK_MAP[item[0]](*item[1]).__dict__
-        children = list(map(createChild, items.values()))
-        self.__getattribute__(list_item)['children'].extend(children)        
+    def __init__(self, list_type: str, content: Optional[str] = None, 
+                *children: dict) -> None:
+        super(ListItem, self).__init__(list_type, content)  
+        self.__getattribute__(list_type)['children'].extend(children)
+
+class NumberedList(ListItem):
+    def __init__(self, content: Optional[str] = None, *children: dict) -> None:
+        super(NumberedList, self).__init__("numbered_list_item", content, *children)
 
 class BulletedList(ListItem):
-    def __init__(
-        self, content: Optional[str] =None, **items: tuple[str,list]
-    ) -> None:
-        super(BulletedList, self).__init__("bulleted_list_item", content, **items)
-        
-class NumberedList(ListItem):
-    def __init__(
-            self, content: Optional[str] =None, **items: tuple[str,list]
-        ) -> None:
-        super(NumberedList, self).__init__("numbered_list_item", content, **items)
-        
+    def __init__(self, content: Optional[str] = None, *children: dict) -> None:
+        super(BulletedList, self).__init__("bulleted_list_item", content, *children)
+                
 BLOCK_MAP = {
     "table_of_content": TableOfContent,
     "thematic_break": Divider, # divider
     
     "heading": Heading, # f"heading_{level}"
     "paragraph": Paragraph, # "paragraph"
+    "block_text" : Paragraph,
     "block_quote": Quote, # "quote"
     "block_callout": Callout, # "callout"
     "block_code": CodeBlock, # "code"
-    "task_list_item": Todo, # "to_do"
+    "to_do": Todo, # "to_do"
     # type: list  
     # ordered: bool =False
     "list_item": ListItem,
     # type: list  
     # ordered: bool
 
-    # "ul": BulletedList, # "bulleted_list_item"
-    # "ol": NumberedList # "numbered_list_item"
+    "bulleted": BulletedList, # "bulleted_list_item"
+    "numbered": NumberedList # "numbered_list_item"
 }
 
 

@@ -1,24 +1,10 @@
 import json
 import base64
-from typing import Optional
 import mistune
 from pprint import pprint
 
-from utils.block_callout import plugin_callout
-from schemas.block import BLOCK_MAP
-
-with open('./notion-app/sample/markdown.ipynb', 'r') as f:
-    file = f.read()
-
-# convert data into dict
-file = json.loads(file)
-
-# number of cells
-num = len(file['cells']) # 4
-
-def writeImage(img_data, img_name="imageToSave"):
-    with open(f"./notion-app/try/{img_name}.png", "wb") as fh:
-        fh.write(base64.urlsafe_b64decode(img_data))
+from .utils.block_callout import plugin_callout
+from .schemas.block import BLOCK_MAP
 
 def getContent(block: dict, content: str='') -> str:
     if not block.get('children'): return ''
@@ -42,7 +28,12 @@ def createBlock(block: dict, list_type: str='') -> dict:
             content = getContent(block['children'][1])
             obj = BLOCK_MAP[blockType](content)
         case 'block_code':
-            language = block['info'].split('=')[0]
+            try:
+                block['info'].index('=')
+                language = block['info'].split('=')[0]
+            except:
+                language = block['info']    
+            # language = block['info'].split('=')[0]
             content = block['text']
             obj = BLOCK_MAP[blockType](content, language)
         case 'list_item':
@@ -79,57 +70,33 @@ def createList(data: dict) -> list:
     data = {'type': 'list', 'ordered': bool, 'children': [...]}
     '''
     list_type = 'numbered' if data['ordered'] else 'bulleted'
-    items = [createListItem(item, list_type) for item in block['children']]
+    items = [createListItem(item, list_type) for item in data['children']]
     return items
 
-for i, cell in enumerate(file['cells']):
-    cellType = cell['cell_type']
-    if cellType == 'markdown':
-        source: str =''.join(cell['source'])
-        plugins = ['table', 'task_lists', 'url', 'abbr',
-                    'strikethrough', plugin_callout]
-        blocks: list[dict] =mistune.markdown(source, renderer='ast', plugins=plugins)
-        blockList: list[dict] =[]
-        for i, block in enumerate(blocks):
-            print(i)
-            blockType = block['type']
+def createNotebook(notebook) -> list[dict]:
+    
+    notebook = json.loads(notebook)
 
-            match blockType:
-                case 'newline': continue
-                case 'thematic_break'|'heading'|'paragraph'|'block_quote' \
-                    |'block_callout'|'block_code':
-                    blockList.append(createBlock(block))
-                case 'list':
-                    items = createList(block)
-                    blockList.extend(items)
-                case _:
-                    print(f'{blockType} is in BLOCK_MAP: {blockType in BLOCK_MAP}')
-                    pprint(block)          
-            print('='*10)
-        # pprint(blockList)
-
-
-'''
-    if (outputs := cell.get('outputs')):
-        for output in outputs:
-            if output.get('name') == 'stdout': 
-                # the real output result
-                # list of output text lines
-                res: list[str] = output['text']  
-            if output.get('output_type') == 'error':
-                # the error message
-                err = f"{output['ename']}: {output['evalue']}"
-            if (data := output.get('data')):
-                if data.get('text/plain'):
-                    # list of plain text lines
-                    res: list[str] = data['text/plain']
-                if data.get('text/html'):
-                    # list of html text lines
-                    html: list[str] = data['text/html']
-                if data.get('image/png'):
-                    # string of encoded image
-                    img: str = data['image/png']
-                    writeImage(img)
-
-    print('='*20)
-'''    
+    blockList: list[dict] =[]
+    for cell in notebook['cells']:
+        match cell:
+            case {'cell_type': 'code', 'source': source, **rest}:
+                source = ''.join(source)
+                block = BLOCK_MAP['block_code'](source, 'python').__dict__
+                blockList.append(block)
+            case {'cell_type': 'markdown', 'source': source, **rest}:
+                source: str =''.join(source)
+                plugins = ['table', 'task_lists', 'url', 'abbr',
+                            'strikethrough', plugin_callout]
+                blocks: list[dict] =mistune.markdown(source, renderer='ast', plugins=plugins)
+                for block in blocks:
+                    match block['type']:
+                        case 'newline': continue
+                        case 'thematic_break'|'heading'|'paragraph'|'block_quote' \
+                            |'block_callout'|'block_code':
+                            blockList.append(createBlock(block))
+                        case 'list':
+                            items = createList(block)
+                            blockList.extend(items)
+                        # case _: continue
+    return blockList

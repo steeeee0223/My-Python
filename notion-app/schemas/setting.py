@@ -1,4 +1,6 @@
 languages = {
+    ".ipynb": "notebook",
+
     ".abap": "abap", 
     ".ino": "arduino", 
     ".bash": "bash", 

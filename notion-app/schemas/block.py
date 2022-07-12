@@ -58,6 +58,26 @@ class NumberedList(ListItem):
 class BulletedList(ListItem):
     def __init__(self, content: Optional[str] = None, *children: dict) -> None:
         super(BulletedList, self).__init__("bulleted_list_item", content, *children)
+
+class TableRow():
+    def __init__(self) -> None:
+        self.type = 'table_row'
+        self.table_row = {}
+
+class Table():
+    def __init__(self) -> None:
+        '''
+        {
+            "type": "table",
+            "table": {
+                "table_width": 3,
+                "has_column_header": false,
+                "has_row_header": false,
+            }
+        }
+        '''
+        self.type = 'table'
+        self.table = {}
                 
 BLOCK_MAP = {
     "table_of_content": TableOfContent,

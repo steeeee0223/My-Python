@@ -16,3 +16,5 @@ def match(data: dict):
             return 'NO LEVEL'
 print(match(data))
 
+lst = ['a','b','c']
+print(dict(enumerate(lst)))

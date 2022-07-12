@@ -1,0 +1,1 @@
+web: uvicorn notion-app.main:app 

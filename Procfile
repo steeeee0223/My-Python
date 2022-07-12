@@ -1,1 +1,1 @@
-web: uvicorn notion-app.main:app 
+web: uvicorn notion-app.main:app --port=${PORT:-5000}

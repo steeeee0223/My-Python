@@ -1,18 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Steeeee Notion Database</title>
-</head>
-<body>
-    <h1>Select a Database</h1>
-    <form action="/select/" method='POST' enctype="multipart/form-data">
-        <label for="database_url">Paste your notion database url</label>
-        <input type="url" id="database_url" name="database_url"/><br>
-        <input type="submit" value="Submit"/>
-    </form>
+{% extends 'main.html' %}
+
+{% block content %}
+
+<h1>Select a Database</h1>
+<form action="/select/" method='POST' enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="database_url" class="form-label">Paste your notion page url</label>
+        <input type="url" id="database_url" name="database_url" class="form-control" 
+                placeholder="e.g. https://www.notion.so/xxx/xxx-xxx?v=xxx">
+    </div>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
     
-</body>
-</html>
+{% endblock content %}

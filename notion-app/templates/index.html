@@ -1,33 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="{{ url_for('static', path='/termynal.css') }}" rel="stylesheet">
-    <title>Steeeee Notion Database</title>
-</head>
-<body>
-    <h1>Get Started</h1>
-    <div class="termy">
-        <div data-termynal="" style="width: 688px; min-height: 267.539px;">
-            <a href="/" data-terminal-control="" style="visibility: hidden;">fast →</a>
-            <span data-ty="input" style="visibility: visible;">pip install jinja2</span>
-            <span data-ty-delay="0" style="visibility: visible;"><br></span>
-            <span data-ty="progress" style="visibility: visible;">████████████████████████████████████████ 100%</span>
-            <span data-ty-delay="0" style="visibility: visible;"><br></span>
-            <a href="/" data-terminal-control="">restart ↻</a>
-        </div>
-    </div>
+{% extends 'main.html' %}
+
+{% block content %}
+<h1>Get Started</h1>
+<div class="mb-3">
     <form action="/create/" method='GET'>
         <label for="create">Create a new database in a page</label>
-        <input type="submit" id="create" value="Create Database"/>
+        <button type="submit" id="create" class="btn btn-primary">Create Database</button>
     </form>
-    <br>
+</div>
+<div class="mb-3">
     <form action="/select/" method='GET'>
-        <label for="upload">Upload files to an existing database</label>
-        <input type="submit" id="select" value="Select Database"/>
+        <label for="select">Upload files to an existing database</label>
+        <button type="submit" id="select" class="btn btn-secondary">Select Database</button>
     </form>
-    <script src="{{ url_for('static', path='/termynal.js') }}"></script>
-</body>
-</html>
+</div>
+{% endblock content %}

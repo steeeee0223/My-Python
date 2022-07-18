@@ -7,7 +7,6 @@ from fastapi.templating import Jinja2Templates
 # Import from Files
 # REMEMBER TO ADD . BACK
 from .utils.get_id import getId
-from .page import createPage
 from .database import createDatabase, insertDatabase, readDatabase
 
 # Fetch token
@@ -17,7 +16,6 @@ token = data['token']
 headers = data['headers']
 headers["Authorization"] = f'Bearer {token}'
     
-
 app = FastAPI()
 
 templates = Jinja2Templates(directory="notion-app/templates")
@@ -63,11 +61,6 @@ async def select_database(request: Request, database_url: str =Form()):
 async def get_upload_page(request: Request, id: str):
     print('Running get_upload_page...')
     return templates.TemplateResponse('upload.html', {'request': request, 'id': id})
-
-# async def upload_task(id: str, file: UploadFile, background_tasks: BackgroundTasks):
-#     '''Currently not using this function'''
-#     background_tasks.add_task(createPage, id, file)
-#     return background_tasks.tasks[-1]
 
 @app.post('/upload/{id}', response_class=HTMLResponse)
 async def upload_files(request: Request, id: str, file_lists: list[UploadFile]):

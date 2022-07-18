@@ -1,20 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Steeeee Notion Database</title>
-</head>
-<body>
-    <h1>Create New Database</h1>
+{% extends 'main.html' %}
+
+{% block content %}
+
+<h1>Create New Database</h1>
+<div class="mb-3">
     <form action="/create/" method='POST' enctype="multipart/form-data">
-        <label for="page_url">Paste your notion page url</label>
-        <input type="url" id="page_url" name="page_url"/><br>
-        <label for="database_name">Enter your database name</label>
-        <input type="text" id="database_name" name="database_name"/><br>
-        <input type="submit" value="Submit"/>
+        <div class="mb-3">
+            <label for="page_url" class="form-label">Paste your notion page url</label>
+            <input type="url" id="page_url" name="page_url" class="form-control" 
+                    placeholder="e.g. https://www.notion.so/xxx/xxx-xxx?v=xxx">
+        </div>
+        <div class="mb-3">
+            <label for="database_name" class="form-label">Enter your database name</label>
+            <input type="text" id="database_name" name="database_name"
+                    class="form-control"/>
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
     </form>
-    
-</body>
-</html>
+</div>
+{% endblock content %}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"    
+          rel="stylesheet" 
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+    <title>Steeeee Notion Database</title>
+</head>
+<body>
+    <h1>Get Started</h1>
+    <div class="mb-3">
+        <form action="/create/" method='GET'>
+            <label for="create">Create a new database in a page</label>
+            <button type="submit" id="create" class="btn btn-primary">Create Database</button>
+        </form>
+    </div>
+    <br>
+    <div class="mb-3">
+        <form action="/select/" method='GET'>
+            <label for="select">Upload files to an existing database</label>
+            <button type="submit" id="select" class="btn btn-secondary">Select Database</button>
+        </form>
+    </div>
+</body>
+</html>

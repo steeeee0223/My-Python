@@ -1,5 +1,6 @@
 import requests
 import json
+import time
 from fastapi import UploadFile
 
 from .block import writeJson
@@ -27,7 +28,8 @@ def createDatabase(page_id: str, db_name: str):
     Returns the created `database_id`
     '''
     url = "https://api.notion.com/v1/databases"
-    database = Database(page_id, db_name, Name="title", Tags="multi_select", Language="select").__dict__
+    database = Database(page_id, db_name, 
+                        Name="title", Tags="multi_select", Language="select").__dict__
     res = requests.post(url=url, headers=headers, json=database)
     print(res.status_code)
     res_data = dict(res.json())
@@ -36,15 +38,16 @@ def createDatabase(page_id: str, db_name: str):
     database_id = new_url.split('/')[-1]
     return database_id
 
-def insertDatabase(database_id: str, file_lists: list[UploadFile]) -> dict[str,list]:
-    failed = {'ignored': [], 'content': []}
+# ADD ASYNC
+async def insertDatabase(database_id: str, file_lists: list[UploadFile]):
     for file in file_lists:
+        time.sleep(1)
         code = createPage(database_id, file)
-        if not code: 
-            failed['ignored'].append(file.filename); print('/', end='')
-        elif code != 200: 
-            failed['content'].append(file.filename); print('x', end='')
-        else: print('#', end='')
-    print('')
-    return failed
+        match code:
+            case 200: yield f'{file.filename} PASSED\n'
+            case 415: yield f'{file.filename} IGNORED\n'
+            case _: yield f'{file.filename} PAYLOAD TOO LARGE\n'
+    yield "PROCESS DONE\n"
+
+    
 

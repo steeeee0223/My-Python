@@ -1,6 +1,4 @@
 import json
-from pprint import pprint
-import re
 import requests
 from fastapi import UploadFile
 from pathlib import PurePath
@@ -28,18 +26,18 @@ def splitContent(s: str, n: int=2000):
         while s: yield s[:n]; s = s[n:]
     return list(_f(s, n))
 
-def createPage(database_id: str, file: UploadFile) -> int|None:
+def createPage(database_id: str, file: UploadFile) -> int:
     url = f'https://api.notion.com/v1/pages'
     path = file.filename
 
-    print(f'Uploading file ... {path}')
+    # print(f'Uploading file ... {path}')
 
     obj = PurePath(path)
     tags = obj.parts
-    if ignore.intersection(tags): return # path
+    if ignore.intersection(tags): return 415 # Unsupported Media Type
     name, ext = obj.stem, obj.suffix
 
-    if ext not in languages: return # path
+    if ext not in languages: return 415 # Unsupported Media Type
     else:
         language = languages[ext]
         content = file.file.read().decode('utf8')

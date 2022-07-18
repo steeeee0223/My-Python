@@ -14,4 +14,12 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>
+{% if result %}
+<h2>STREAMING RESPONSE</h2>
+<ul>
+    {% for x in result %}
+    <li> {{ x }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
 {% endblock content %}

@@ -2,38 +2,14 @@
 
 {% block content %}
 <h1>Upload Results</h1>
-{% if failed['ignored'] %}
-    <div>
-        <h3>Ignored Files</h3>
-        <p class="text-muted">
-            The following type of files are automatically ignored
-            since the file types are not supported.
-        </p>
-        <ul>
-            {% for name in failed['ignored'] %}
-                <li>{{ name }}</li>   
-            {% endfor %}
-        </ul>
-    </div>
-{% else %}
-    <div><h3>No files are ignored</h3></div>
-{% endif %}
-{% if failed['content'] %}
-    <div>
-        <h3>Failed Files</h3>
-        <p class="text-muted">
-            The following list of files are failed to upload
-            since the content length of each file > 2000.
-        </p>
-        <ul>
-            {% for name in failed['content'] %}
-                <li>{{ name }}</li>   
-            {% endfor %}
-        </ul>
-    </div>
-{% else %}
-    <div><h3>All files are successfully uploaded</h3></div>    
-{% endif %}
+<h2>STREAMING RESPONSE</h2>
+<ul>
+    {% for x in result %}
+    <li> {{ x }} </li>
+    {% endfor %}
+</ul>
+
+
 
 <a href="{{ url_for('get_upload_page', id=id) }}" class="btn btn-primary" role="button">
     Upload more files

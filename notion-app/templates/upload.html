@@ -3,10 +3,10 @@
 {% block content %}
 
 <h1>Upload Directories</h1>
-<form action="/upload/{{id}}" method='POST' enctype="multipart/form-data">
+<form action="/upload/{{id}}" method='POST' id="myForm" enctype="multipart/form-data">
     <div class="mb-3">
         <label for="file_input" class="form-label">Select a Folder</label>
-        <input type="file" id="file_input" name="file_lists" 
+        <input type="file" id="files" name="file_lists" 
                class="form-control" webkitdirectory directory/>
         <input type="text" id="directories" name="directories" hidden/>
     </div>
@@ -14,12 +14,34 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>
-{% if result %}
-<h2>STREAMING RESPONSE</h2>
-<ul>
-    {% for x in result %}
-    <li> {{ x }} </li>
-    {% endfor %}
-</ul>
-{% endif %}
+<div id="response_area">
+    <h3>UPLOAD RESPONSE</h3>
+    <ul id="result"></ul>
+</div>
+
+<script>
+document.getElementById('myForm').addEventListener('submit', function(event){
+    event.preventDefault();
+    let result = document.getElementById("result");
+    let files = document.getElementById("files").files;
+    for (let i=0; i<files.length; i++) {
+        let msg = document.createElement("li");
+        let file = new FormData();
+        file.append('file', files[i]);
+        
+        fetch('/submit/{{id}}', {
+                method: 'POST', body: file,
+            })
+            .then(response => response.text())
+            .then(data => {
+                msg.innerHTML = data;
+                result.appendChild(msg);
+            })
+            .catch(error => {
+                console.error(error);
+            })    
+    };
+}, false)
+</script>
+
 {% endblock content %}

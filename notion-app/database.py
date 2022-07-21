@@ -38,8 +38,7 @@ def createDatabase(page_id: str, db_name: str):
     database_id = new_url.split('/')[-1]
     return database_id
 
-# ADD ASYNC
-async def insertDatabase(database_id: str, file_lists: list[UploadFile]):
+def insertDatabase(database_id: str, file_lists: list[UploadFile]):
     for file in file_lists:
         time.sleep(1)
         code = createPage(database_id, file)

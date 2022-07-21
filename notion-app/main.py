@@ -1,16 +1,15 @@
 import json
-import uuid
-import asyncio
-from fastapi import FastAPI, Request, Form, Response, UploadFile, BackgroundTasks
-from fastapi.responses import HTMLResponse, RedirectResponse, StreamingResponse
+from fastapi import FastAPI, File, Request, Form, UploadFile
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 
 # Import from Files
 # REMEMBER TO ADD . BACK
 from .utils.get_id import getId
 from .page import createPage
-from .database import createDatabase, insertDatabase, readDatabase
+from .database import createDatabase, readDatabase
 
 # Fetch token
 file = open('notion-app/SECRET.json')
@@ -18,9 +17,26 @@ data = json.load(file)
 token = data['token']
 headers = data['headers']
 headers["Authorization"] = f'Bearer {token}'
-    
+
 app = FastAPI()
 
+# cors
+origins = [
+    "http://localhost",
+    "http://localhost:8000",
+    "http://localhost:8080",
+    "http://127.0.0.1:8000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# template & static files
 templates = Jinja2Templates(directory="notion-app/templates")
 app.mount("/static", StaticFiles(directory="notion-app/static"), name="static")
 
@@ -68,60 +84,19 @@ async def get_upload_page(request: Request, id: str):
 @app.post('/upload/{id}', response_class=HTMLResponse)
 async def upload_files(request: Request, id: str, file_lists: list[UploadFile]):
     print('Running upload_files...')
-    result = []
-    res = StreamingResponse(insertDatabase(id, file_lists))
-    result = [x async for x in res.body_iterator]
 
     return templates.TemplateResponse(name='upload.html', context={
-        'request': request, 'id': id, 'result': result
+        'request': request, 'id': id
     })
 
-# work = {'jobs': {}}
-# async def do_work(job_key: str, database_id: str, file_lists: list[UploadFile] =[]):
-#     for i, file in enumerate(file_lists):
-#         code = createPage(database_id, file)
-#         jobs = work['jobs']
-#         job_info = jobs[job_key]
-#         job_info['iteration'] = file.filename
-#         job_info['status'] = code
-#         await asyncio.sleep(1)
-    # work[job_key]['status'] = 'done'
-
-# @app.post('/work/test')
-# @app.post('/upload/{id}', response_class=HTMLResponse)
-# async def upload_files(request: Request, id: str, files: list[UploadFile]):
-#     print('Running upload_files...')
-#     identifier = str(uuid.uuid4())
-#     work['jobs'][identifier] = {}
-#     print(work)
-#     asyncio.run_coroutine_threadsafe(do_work(identifier, id, files), loop=asyncio.get_running_loop())
-
-#     return templates.TemplateResponse(name='work.html', context={
-#         'request': request, "identifier": identifier
-#     })
-
-
-# @app.get('/work/{id}')
-# async def get_testing(request: Request, id: str):
-#     identifier = str(uuid.uuid4())
-#     work['jobs'][identifier] = {}
-#     asyncio.run_coroutine_threadsafe(do_work(identifier, id), loop=asyncio.get_running_loop())
-
-#     return templates.TemplateResponse(name='work.html', context={
-#         'request': request, "identifier": identifier
-#     })
-
-# @app.get('/status')
-# def status(request: Request):
-#     return templates.TemplateResponse(name='work.html', context={
-#         'request': request, 'all': list(work['jobs'].values()),
-#     })
-
-# @app.get('/status/{identifier}')
-# async def status_identifier(request: Request, identifier: str):
-#     return templates.TemplateResponse(name='work.html', context={
-#         'request': request, 
-#         "status": work['jobs'].get(identifier, 'job with that identifier is undefined'),
-#     })
+@app.post('/submit/{id}', response_class=HTMLResponse)
+async def submitEachFile(request: Request, id: str, file: UploadFile=File(...)):
+    print(f'Running submit... {file.filename}')
+    
+    code = createPage(id, file)
+    match code:
+        case 200: return f'{file.filename} PASSED'
+        case 415: return f'{file.filename} IGNORED'
+        case _: return f'{file.filename} PAYLOAD TOO LARGE'
 
 # readDatabase("a5236de701154552a04315e398e098c8")

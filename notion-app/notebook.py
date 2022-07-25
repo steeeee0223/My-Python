@@ -1,9 +1,10 @@
 import json
-import base64
 import mistune
 from pprint import pprint
+import re
 
 from .utils.block_callout import plugin_callout
+from .utils.util import splitContent
 from .schemas.block import BLOCK_MAP
 
 def getContent(block: dict, content: str='') -> str:
@@ -12,45 +13,45 @@ def getContent(block: dict, content: str='') -> str:
         content += child.get('text', getContent(child))
     return content
 
-def createBlock(block: dict, list_type: str='') -> dict:
+def parseBlock(block: dict, list_type: str='') -> list[dict]:
     match (blockType := block['type']):
         case 'thematic_break':
-            obj = BLOCK_MAP[blockType]()
+            objects = [BLOCK_MAP[blockType]().__dict__]
         case 'heading':
-            level = block['level'] if block['level'] < 4 else 3
             content = getContent(block)
-            obj = BLOCK_MAP[blockType](level, content)
+            if block['level'] < 4:
+                objects = createBlocks('heading', content=content, level=block['level'])
+            else:
+                objects = createBlocks('paragraph', content=content)    
         case 'paragraph'|'block_quote':
             content = getContent(block)
-            obj = BLOCK_MAP[blockType](content)
+            objects = createBlocks(blockType, content=content)
         case 'block_callout':
             header = block['children'][0]['text'] # e.g. info, danger...
             content = getContent(block['children'][1])
-            obj = BLOCK_MAP[blockType](content)
+            objects = createBlocks(blockType, content=content)
         case 'block_code':
-            try:
-                block['info'].index('=')
-                language = block['info'].split('=')[0]
-            except:
-                language = block['info']    
-            # language = block['info'].split('=')[0]
-            content = block['text']
-            obj = BLOCK_MAP[blockType](content, language)
+            match = re.match(r'([a-z]+)(=\d*)?', block['info'])
+            language = match.group(1) if match else "plain text"
+            objects = createBlocks(blockType, content=block['text'], language=language)
         case 'list_item':
             content = getContent(block['children'][0])
-            print(content)
-            obj = BLOCK_MAP[list_type](content)
+            objects = createBlocks(list_type, content=content)
         case 'task_list_item':
             content = getContent(block['children'][0])
-            checked = block['checked']
-            obj = BLOCK_MAP['to_do'](content, checked)
+            objects = createBlocks('to_do', content=content, checked=block['checked'])
         case _:
             pprint(block)
             print('WILDCARD CASE')
-            obj = []
-    return obj.__dict__
+            objects = []
+    return objects
 
-def createListItem(data: dict, list_type: str) -> dict:
+def createBlocks(block_type: str, content: str, **keys) -> list[dict]:
+    contents = splitContent(content)
+    objects = [BLOCK_MAP[block_type](content=x, **keys).__dict__ for x in contents]
+    return objects
+
+def createListItem(data: dict, list_type: str) -> list[dict]:
     '''
     FOR AT MOST LEVEL 2
     data = {'type': 'list_item', 'children': [...]}
@@ -59,18 +60,22 @@ def createListItem(data: dict, list_type: str) -> dict:
     if len(data['children']) > 1:
         content, rest = data['children']
         content = getContent(content)        
-        children = [createBlock(item, list_type) for item in rest['children']]
-        obj = BLOCK_MAP[list_type](content, *children).__dict__
+        children = []
+        for item in rest['children']:
+            children.extend(parseBlock(item, list_type))
+        obj = [BLOCK_MAP[list_type](content, *children).__dict__]
     else:
-        obj = createBlock(data, list_type)
+        obj = parseBlock(data, list_type)
     return obj
 
-def createList(data: dict) -> list:
+def createList(data: dict) -> list[dict]:
     '''
     data = {'type': 'list', 'ordered': bool, 'children': [...]}
     '''
     list_type = 'numbered' if data['ordered'] else 'bulleted'
-    items = [createListItem(item, list_type) for item in data['children']]
+    items = []
+    for item in data['children']:
+        items.extend(createListItem(item, list_type))
     return items
 
 def createNotebook(notebook) -> list[dict]:
@@ -81,9 +86,8 @@ def createNotebook(notebook) -> list[dict]:
     for cell in notebook['cells']:
         match cell:
             case {'cell_type': 'code', 'source': source, **rest}:
-                source = ''.join(source)
-                block = BLOCK_MAP['block_code'](source, 'python').__dict__
-                blockList.append(block)
+                blocks = createBlocks('block_code', content=''.join(source), language="python")
+                blockList.extend(blocks)
             case {'cell_type': 'markdown', 'source': source, **rest}:
                 source: str =''.join(source)
                 plugins = ['table', 'task_lists', 'url', 'abbr',
@@ -94,9 +98,8 @@ def createNotebook(notebook) -> list[dict]:
                         case 'newline': continue
                         case 'thematic_break'|'heading'|'paragraph'|'block_quote' \
                             |'block_callout'|'block_code':
-                            blockList.append(createBlock(block))
+                            blockList.extend(parseBlock(block))
                         case 'list':
-                            items = createList(block)
-                            blockList.extend(items)
+                            blockList.extend(createList(block))
                         # case _: continue
     return blockList

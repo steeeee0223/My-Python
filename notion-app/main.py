@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # Import from Files
 # REMEMBER TO ADD . BACK
-from .utils.get_id import getId
+from .utils.util import getId
 from .page import createPage
 from .database import createDatabase, readDatabase
 
@@ -97,6 +97,8 @@ async def submitEachFile(request: Request, id: str, file: UploadFile=File(...)):
     match code:
         case 200: return f'{file.filename} PASSED'
         case 415: return f'{file.filename} IGNORED'
-        case _: return f'{file.filename} PAYLOAD TOO LARGE'
+        case _: 
+            print(f'Result code {code}')
+            return f'{file.filename} PAYLOAD TOO LARGE'
 
 # readDatabase("a5236de701154552a04315e398e098c8")

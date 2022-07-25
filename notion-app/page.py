@@ -2,10 +2,12 @@ import json
 import requests
 from fastapi import UploadFile
 from pathlib import PurePath
+from pprint import pprint
 
 from .schemas.setting import languages
 from .schemas.block import CodeBlock
 from .schemas.page import Page
+from .utils.util import splitContent
 from .block import writeJson
 from .notebook import createNotebook
 
@@ -21,17 +23,9 @@ ignore = {'.DS_Store', 'Icon\r',
           '.vscode', '.ipynb_checkpoints', '__pycache__', '.git', 
           '.devcontainer'}
 
-def splitContent(s: str, n: int=2000):
-    def _f(s, n):
-        while s: yield s[:n]; s = s[n:]
-    return list(_f(s, n))
-
 def createPage(database_id: str, file: UploadFile) -> int:
     url = f'https://api.notion.com/v1/pages'
     path = file.filename
-
-    # print(f'Uploading file ... {path}')
-
     obj = PurePath(path)
     tags = obj.parts
     if ignore.intersection(tags): return 415 # Unsupported Media Type
@@ -42,9 +36,11 @@ def createPage(database_id: str, file: UploadFile) -> int:
         language = languages[ext]
         content = file.file.read().decode('utf8')
         if ext == '.ipynb':
+            block_list = createNotebook(content)
+            # pprint(block_list)
             blocks = {
                 f'block{i}': block
-                for i, block in enumerate(createNotebook(content))
+                for i, block in enumerate(block_list)
             }
         else: 
             content = splitContent(content)
@@ -55,6 +51,7 @@ def createPage(database_id: str, file: UploadFile) -> int:
         page = Page(database_id, name, language, 'Active', *tags[:-1], **blocks)
         res = requests.post(url=url, headers=headers, json=page.__dict__)
         code = res.status_code
+        if code != 200: print(res.text)
         return code
 
 def retrievePage(page_id: str):

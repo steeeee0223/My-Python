@@ -90,12 +90,7 @@ BLOCK_MAP = {
     "block_callout": Callout, # "callout"
     "block_code": CodeBlock, # "code"
     "to_do": Todo, # "to_do"
-    # type: list  
-    # ordered: bool =False
-    "list_item": ListItem,
-    # type: list  
-    # ordered: bool
-
+    "list_item": ListItem, # "list_item"
     "bulleted": BulletedList, # "bulleted_list_item"
     "numbered": NumberedList # "numbered_list_item"
 }

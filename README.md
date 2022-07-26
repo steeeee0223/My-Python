@@ -15,12 +15,16 @@
 - - [x] Content length exceeded
 - - [ ] Failed creating database message
 - - [ ] Failed inserting database message
+- - [ ] Uploading to nonexisting database
 - - [ ] ...
 - [x] Support more file type
 - [x] Suppoer more block objects
-- [ ] Support .ipynb
+- [x] Support .ipynb
+- - [x] Code blocks
+- - [x] Markdown blocks
+- - [x] Output blocks
+- - [x] Large length in each block
 - [x] Create Jinja HTML page
 - [ ] Add CSS and Bootstrap
-- [ ] User update (NO IDEA YET...)
 - [ ] ...
 

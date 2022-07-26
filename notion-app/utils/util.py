@@ -1,4 +1,5 @@
 import re 
+import base64
 
 def getId(url: str) -> str:
     pattern = r'https://www.notion.so/\w+/([\w-]+-)?(\w+)'   
@@ -9,3 +10,7 @@ def splitContent(s: str, n: int=2000) -> list[str]:
     def _f(s, n):
         while s: yield s[:n]; s = s[n:]
     return list(_f(s, n))
+
+def writeImage(img_data, img_name="imageToSave"):
+    with open(f"./notion-app/img/{img_name}.png", "wb") as fh:
+        fh.write(base64.urlsafe_b64decode(img_data))

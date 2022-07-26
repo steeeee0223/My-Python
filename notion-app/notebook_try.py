@@ -7,11 +7,12 @@ from pprint import pprint
 from utils.block_callout import plugin_callout
 from schemas.block import BLOCK_MAP
 
-with open('./notion-app/sample/markdown.ipynb', 'r') as f:
+with open('./notion-app/sample/ML.ipynb', 'r') as f:
     file = f.read()
 
 # convert data into dict
 file = json.loads(file)
+# pprint(file)
 
 # number of cells
 num = len(file['cells']) # 4
@@ -47,7 +48,6 @@ def createBlock(block: dict, list_type: str='') -> dict:
             obj = BLOCK_MAP[blockType](content, language)
         case 'list_item':
             content = getContent(block['children'][0])
-            print(content)
             obj = BLOCK_MAP[list_type](content)
         case 'task_list_item':
             content = getContent(block['children'][0])
@@ -82,15 +82,53 @@ def createList(data: dict) -> list:
     items = [createListItem(item, list_type) for item in data['children']]
     return items
 
+def getOutputContent(data: dict):
+    '''
+    data = {'text/plain': list[str]}
+    data = {'text/html': list[str]}
+    data = {'image/png': str}
+    '''
+    if data.get('text/plain'):
+        content = ''.join(data['text/plain'])
+        print(content)
+    if data.get('image/png'):
+        content = data['image/png']
+        print('IMAGE OUTPUT')
+
+def createOutput(output: dict):
+    match output:
+        case {'output_type': 'stream', 'text': text, **rest}:
+            print('STANDARD OUTPUT')
+            content = ''.join(text)
+            print(content)
+        case {'output_type': 'error', 'ename': ename, 'evalue': evalue, **rest}:
+            print('ERROR OUTPUT')
+            content = f"{ename}: {evalue}"
+            print(content)
+        case {'output_type': 'execute_result', 'data': data, **rest}:
+            print('EXECUTE OUTPUT')
+            getOutputContent(data)
+
+        case {'output_type': 'display_data', 'data': data, **rest}:
+            print('DISPLAY OUTPUT')
+            getOutputContent(data)
+        
+        case _:
+            print("OTHER")
+            pprint(output)
+
+
 blockList: list[dict] =[]
 for i, cell in enumerate(file['cells']):
     match cell:
-        case {'cell_type': 'code', 'source': source, **rest}:
-            # source: str =''.join(cell['source'])
+        case {'cell_type': 'code', 'source': source, 'outputs': outputs, **rest}:
+            for output in outputs:
+                createOutput(output)
+
+
             source = ''.join(source)
             block = BLOCK_MAP['block_code'](source, 'python')
             blockList.append(block)
-            print(source)
         case {'cell_type': 'markdown', 'source': source, **rest}:
             source: str =''.join(source)
             plugins = ['table', 'task_lists', 'url', 'abbr',
@@ -111,7 +149,13 @@ for i, cell in enumerate(file['cells']):
                         print(f'{blockType} is in BLOCK_MAP: {blockType in BLOCK_MAP}')
                         # pprint(block)          
                 print('='*10)
-            # pprint(blockList)
+        # case {'outputs': outputs, **rest}:
+        #     print('='*10)
+        #     print('outputs')
+        #     pprint(outputs)
+        #     print('='*10)
+        case _:
+            pprint(cell)
 
 
 '''

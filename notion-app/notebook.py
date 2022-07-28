@@ -6,6 +6,7 @@ import re
 from .utils.block_callout import plugin_callout
 from .utils.util import splitContent
 from .schemas.block import BLOCK_MAP
+from .schemas.setting import languages
 
 def getContent(block: dict, content: str='') -> str:
     if not block.get('children'): return ''
@@ -35,8 +36,13 @@ def createBlocks(block: dict, list_type: str='') -> list[dict]:
             content = getContent(block['children'][1])
             return createObjects(block_type, content=content)
         case 'block_code':
-            match = re.match(r'([a-z]+)(=\d*)?', block['info'])
-            language = match.group(1) if match else "plain text"
+            if block['info']:     
+                match = re.match(r'([a-z]*)(=\d*)?', block['info'])            
+                language = match.group(1) if match else "plain text"
+                if not language in languages.values():
+                    language = "plain text"
+            else: 
+                language = "plain text"
             return createObjects(block_type, content=block['text'], language=language)
         case 'list_item':
             content = getContent(block['children'][0])

@@ -99,6 +99,6 @@ async def submitEachFile(request: Request, id: str, file: UploadFile=File(...)):
         case 415: return f'{file.filename} IGNORED'
         case _: 
             print(f'Result code {code}')
-            return f'{file.filename} PAYLOAD TOO LARGE'
+            return f'{file.filename} FAILED'
 
 # readDatabase("a5236de701154552a04315e398e098c8")

@@ -15,32 +15,50 @@
     </div>
 </form>
 <div id="response_area">
-    <h3>UPLOAD RESPONSE</h3>
     <ul id="result"></ul>
+    <div id="status"></div>
 </div>
 
 <script>
 document.getElementById('myForm').addEventListener('submit', function(event){
     event.preventDefault();
+    let myForm = document.getElementById("myForm");
     let result = document.getElementById("result");
     let files = document.getElementById("files").files;
-    for (let i=0; i<files.length; i++) {
-        let msg = document.createElement("li");
-        let file = new FormData();
-        file.append('file', files[i]);
-        
-        fetch('/submit/{{id}}', {
-                method: 'POST', body: file,
-            })
-            .then(response => response.text())
-            .then(data => {
-                msg.innerHTML = data;
-                result.appendChild(msg);
-            })
-            .catch(error => {
-                console.error(error);
-            })    
-    };
+    let status = document.getElementById("status");
+
+    if (files.length > 0) {
+        // myForm.style.visibility = 'hidden';
+
+        let header = document.createElement("h3");
+        header.innerHTML = "UPLOAD RESPONSE";
+        result.appendChild(header);
+
+        for (let i=0; i<files.length; i++) {
+            let msg = document.createElement("li");
+            let file = new FormData();
+            file.append('file', files[i]);
+            
+            fetch('/submit/{{id}}', {
+                    method: 'POST', body: file,
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(`file ${i} - ${data}`);
+                    msg.innerHTML = data;
+                    result.appendChild(msg);
+                })
+                .catch(error => {
+                    console.error(error);
+                })    
+        };
+        let redirect = document.createElement("a");
+        redirect.innerHTML = "Upload More Files";
+        redirect.setAttribute('href', "{{ url_for('get_upload_page', id=id) }}");
+        redirect.setAttribute('class', "btn btn-primary");
+        redirect.setAttribute('role', "button");
+        status.appendChild(redirect);
+    }
 }, false)
 </script>
 

@@ -86,10 +86,10 @@ languages = {
     ".es6": "javascript", 
     ".frag": "javascript", 
     ".jss": "javascript", 
-    ".json": "json", 
-    ".geojson": "json", 
-    ".topojson": "json", 
-    ".json5": "json", 
+    # ".json": "json", 
+    # ".geojson": "json", 
+    # ".topojson": "json", 
+    # ".json5": "json", 
     ".jl": "julia", 
     ".kt": "kotlin", 
     ".ktm": "kotlin", 
@@ -158,7 +158,7 @@ languages = {
     ".vbhtml": "visual basic", 
     ".vbs": "visual basic", 
     # "webassembly", 
-    ".xml": "xml", 
+    # ".xml": "xml", 
     ".yaml": "yaml",
     ".yml": "yaml"
 }

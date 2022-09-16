@@ -25,6 +25,7 @@ def createDatabase(page_id: str, db_name: str):
     database = Database(
         page_id, db_name, Name="title", Tags="multi_select", Language="select"
     ).__dict__
+    print(database)
     res = requests.post(url=url, headers=headers, json=database)
     print(res.status_code)
     res_data = dict(res.json())

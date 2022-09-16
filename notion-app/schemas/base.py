@@ -48,7 +48,8 @@ class CodeText:
 class Title:
     def __init__(self, title: Optional[str] = None):
         self.type = "title"
-        self.title = [Text(title).__dict__] if title else []
+        # self.title = [Text(title).__dict__] if title else []
+        self.title = Text(title).__dict__ if title else {}
 
 
 class SelectOptions:
@@ -67,7 +68,8 @@ class Select:
 class MultiSelect:
     def __init__(self, *tags):
         self.type = "multi_select"
-        self.multi_select = [SelectOptions(tag).__dict__ for tag in tags]
+        # self.multi_select = [SelectOptions(tag).__dict__ for tag in tags]
+        self.multi_select = {"options": [SelectOptions(tag).__dict__ for tag in tags]}
 
 
 class CreatedTime:

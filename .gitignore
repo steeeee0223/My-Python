@@ -4,3 +4,5 @@ Icon?
 __pycache__
 /workspace.code-workspace
 .ipynb_checkpoints
+/sample
+/json
